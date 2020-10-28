@@ -1,0 +1,16 @@
+= TS_REST_API
+
+This project is based on https://github.com/aligoren/express-typescript-test and uses link:https://www.typescriptlang.org/[Typescript] and link:https://expressjs.com/[expressjs].
+
+But I think there is not so much left from it as I tried to align this project to my link:https://github.com/steffakasid/rest-api[Go API sample]. Also it shows how to register routes and middlewares.
+
+== Usage
+
+Just run
+
+[source,sh]
+----
+npm install
+
+npm start
+----
