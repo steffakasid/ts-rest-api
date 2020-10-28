@@ -1,0 +1,19 @@
+{
+  "name": "ts_rest_api",
+  "version": "1.0.0",
+  "description": "Just a simple sample project to show an express rest-api with typescript",
+  "main": "app.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "typescript",
+    "rest",
+    "api"
+  ],
+  "author": "steffakasid",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^3.9.2"
+  }
+}
