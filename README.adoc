@@ -14,3 +14,9 @@ npm install
 
 npm start
 ----
+
+Afterwards you can just call the following endpoings e.g. in your Browser:
+. http://localhost:8080/
+. http://localhost:8080/health
+. http://localhost:8080/json
+. http://localhost:8080/notfound

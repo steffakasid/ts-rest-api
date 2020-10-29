@@ -1,22 +1,22 @@
-import Router from './router/Router'
+import { Router } from './router/Router'
 
 import * as bodyParser from 'body-parser'
-import Logger from './middleware/Logger'
+import { Middleware , Logger, NotFoundErrorHandler } from './middleware/Middleware'
+import { Health, Index, Json} from './middleware/Controller'
+import { DefaultErrorHandler } from './middleware/ErrorHandler'
 
-import Routes from './router/Routes'
-
-const router = new Router({
-    port: process.env.PORT ? Number(process.env.PORT) : 8080,
-    routes: new Routes(),
-    middleWares: [
-        {
-            handleRequestAndForward: bodyParser.json()
-        },
-        {
-            handleRequestAndForward: bodyParser.urlencoded({ extended: true })
-        },
-        new Logger()
-    ]
+export const router = new Router({
+  port: process.env.PORT ? Number(process.env.PORT) : 8080,
+  handlers: [
+    new Middleware(bodyParser.json()),
+    new Middleware(bodyParser.urlencoded({ extended: true })),
+    Logger,
+    Health,
+    Index,
+    Json,
+    NotFoundErrorHandler,
+    DefaultErrorHandler
+  ]
 })
 
-router.listen()
+export const server = router.listen()

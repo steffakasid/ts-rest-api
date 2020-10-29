@@ -1,52 +1,44 @@
 import * as express from 'express'
-import { Application } from 'express'
-import Routes from './Routes'
-import HTTP_METHODS from './HTTP_METHODS'
-import IMiddleware from '../middleware/IMiddleware'
+import { Server } from 'http'
 
-class Router {
-    public app: Application
-    public port: number
+import { EMethods } from './EMethods'
+import { IHandler } from '../middleware/IHandler'
 
-    constructor(init: { port: number; middleWares: IMiddleware[]; routes: Routes; }) {
-        this.app = express()
-        this.port = init.port
+export class Router {
+  public app: express.Application
+  public port: number
 
-        this.initMiddlewares(init.middleWares)
-        this.initRoutes(init.routes)
-        this.app.use(this.errorHandler)
-    }
+  constructor(init: { port: number; handlers: IHandler[]}) {
+    this.app = express()
+    this.port = init.port
 
-    private initMiddlewares(middleWares: IMiddleware[]) {
-        middleWares.forEach(middleWare => {
-            this.app.use(middleWare.handleRequestAndForward)
-        })
-    }
+    this.initHandlers(init.handlers)
+  }
 
-    private initRoutes(routes: Routes) {
-        routes.getRoutes().forEach(route => {
-            switch (route.method) {
-                case HTTP_METHODS.post: this.app._router.post(route.path, route.handler.handleRequest); break;
-                case HTTP_METHODS.get:
-                default: case HTTP_METHODS.get: this.app._router.get(route.path, route.handler.handleRequest)
-            }
-        })
-    }
-
-    private errorHandler(err, req, res, next) {
-        console.log("Handling Error!")
-        if (res.headersSent) {
-            return next(err)
+  private initHandlers(handlers: IHandler[]) {
+    handlers.forEach(handler => {
+      switch (handler.method) {
+        case EMethods.any: {
+          if (handler.path) {
+            this.app.use(handler.path, handler.getCallback())
+          } else {
+            this.app.use(handler.getCallback())
+          }
+          break
         }
-        res.status(500)
-        res.json('error', { error: err })
-    }
+        case EMethods.delete: this.app.delete(handler.path, handler.getCallback()); break
+        case EMethods.patch: this.app.patch(handler.path, handler.getCallback()); break
+        case EMethods.post: this.app.post(handler.path, handler.getCallback()); break
+        case EMethods.put: this.app.put(handler.path, handler.getCallback()); break
+        case EMethods.get:
+        default: this.app.get(handler.path, handler.getCallback())
+      }
+    })
+  }
 
-    public listen() {
-        this.app.listen(this.port, () => {
-            console.log(`App listening on the http://localhost:${this.port}`)
-        })
-    }
+  public listen(): Server {
+    return this.app.listen(this.port, () => {
+      console.log(`App listening on the http://localhost:${this.port}`)
+    })
+  }
 }
-
-export default Router
