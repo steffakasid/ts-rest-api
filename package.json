@@ -20,7 +20,7 @@
   "author": "steffakasid",
   "license": "ISC",
   "devDependencies": {
-    "@types/express": "^4.17.8",
+    "@types/express": "4.17.13",
     "@types/node": "16.11.38",
     "nodemon": "2.0.16",
     "ts-node": "10.8.0",
